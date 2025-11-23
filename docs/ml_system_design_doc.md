@@ -76,26 +76,34 @@
 
 ```mermaid
 graph TD
-    subgraph Пользователь
-        A[Клиент в Telegram]
+    subgraph "User Interface"
+        A["User via Telegram"]
     end
 
-    subgraph Система Fixly
-        B[Backend-сервис]
-        C{AI-модуль (LLM + RAG)}
-        D[(Векторная база знаний)]
+    subgraph "Fixly System"
+        B["Backend Service"]
+        C{"AI Module"}
+        D[("Vector Database")]
     end
     
-    subgraph Результат
-         E[Отчет для мастера]
+    subgraph "Output"
+         E["Report for Technician"]
     end
 
-    A -- Фото и описание --> B
-    B -- Запрос на анализ --> C
-    C -- Поиск релевантной информации --> D
-    D -- Контекст --> C
-    C -- Сгенерированный ответ --> B
-    B -- Форматирование --> E
+    A -- "1. Photo and Description" --> B
+    B -- "2. Analysis Request" --> C
+    C -- "3. Search for Context" --> D
+    D -- "4. Relevant Info" --> C
+    C -- "5. Structured Answer" --> B
+    B -- "6. Format and Send" --> E
+
+Описание схемы:
+
+Клиент (User) отправляет данные через Telegram.
+Backend-сервис принимает запрос и передает его в AI-модуль.
+AI-модуль обращается к Векторной базе данных за релевантной информацией (контекстом).
+Получив контекст, AI-модуль формирует структурированный ответ.
+Backend получает этот ответ, форматирует его в удобный для чтения Отчет и отправляет мастеру.
 ```
 
 **Описание схемы:**
