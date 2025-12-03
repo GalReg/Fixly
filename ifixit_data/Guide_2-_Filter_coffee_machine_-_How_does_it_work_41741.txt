@@ -1,0 +1,38 @@
+Source Path: Guide/2+-+Cafetière+filtre-+Comment+ça+marche-/168217
+Original Title: 2- Filter coffee machine - How does it work?
+--------------------
+
+Заголовок: 2- Filter coffee machine - How does it work?
+
+--- ВВЕДЕНИЕ ---
+Введение
+The aim of this guide is to see the different components that make up the device, and to understand their function, how they work independently and how they interact.
+This
+page
+might be of interest as well!
+
+--- ШАГИ ---
+
+Шаг 1:
+The water enters, under pressure from the cold water in the chamber located above. The heating element, which is located on the base of the coffee machine, heats up the water (Joule effect). The water transforms into steam. Small bubbles form and fuse together, creating larger bubbles.
+Since the steam's density is far weaker than water's, these bubbles tend to rise ('float'), per Archimedes' principle. Ascending force arises through the thrust difference between the pression above, and the pressure below, the bubble.
+The bubble forming gets a lifting push equal to the mass of the displaced water. The bubbles go to the exit, through the vertical tubing. They drag the hot water 'trapped' between bubbles upwards, to the infuser where they pour over the coffee grounds to infuse.
+Once infused, the 'juice' goes through the (generally single use) filter, then flows into the coffee pot. Once it's collected in the pot, it's ready to be served. Otherwise, the hot plate keeps it warm.
+
+Шаг 2:
+The role of the heating element is to allow the water to bubble and let it go from the cold water receptacle to the filter.
+The heating element is made up of tubing made of extruded aluminum. The heating element is curved into a circular arc in order to communicate with the heating plate and transmit its heat to it.
+The design of the element includes two sections: one for water to go through (2), and the other for a heating resistor (1).  The element is made of aluminium for its malleability and heat conduction.
+The section for the heating element contains an alloy thread (75% iron/20% chrome/5% aluminium), covered by a ceramic layer (MgO and alumina powder) inside the tube from the same alloy and sealed with glue.
+It's easy to tell this alloy apart from conventional nichrome, thanks to its elevated resistivity, good resistance to oxidation, and functioning at temperatures over 1300°C / 2372 F. (Source:
+https://www.kanthal.com/en/products/mate...
+)
+Its power, depending on the model, is around 1000W. Measures made with 1000W resistance: temperature of the heating element  ~130°C / 266 F - temperature of the water ~80°C / 176 F - temperature of the heating plate ~100°C / 212 F.
+
+Шаг 3:
+The electrical circuit is very simple. Power goes through a switch (5), then through a thermal fuse (4) which protects against accidental overheating (~200°C / 392 F) and against overcurrent (10A).
+A thermostat (3) regulates the temperature. It is placed in contact with the heating element, in other words the resistor (2). All these elements are placed serially. An indicator light (1) placed in parallel, indicates when the device is powered up. Some coffee machines have a programmer instead of a switch.
+
+Шаг 4:
+The circuit is simple. Cold water in the chamber goes down, thanks to gravity. It goes through the hole on the right (1), passing through the heating element.
+Water goes through the rubber hose (2) to enter the heating element (3) then exits (4) to go through the second hose (5). It goes up the tubing (6) and on to the filter.

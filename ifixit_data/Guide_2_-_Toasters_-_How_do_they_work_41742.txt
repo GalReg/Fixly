@@ -1,0 +1,57 @@
+Source Path: Guide/2+-+Grille-pain+toaster+-+Comment+ça+marche-/132261
+Original Title: 2 - Toasters - How do they work?
+--------------------
+
+Заголовок: 2 - Toasters - How do they work?
+
+--- ВВЕДЕНИЕ ---
+Введение
+We are looking here at the various components that make up the toaster, understanding their purpose, how each of them works individually, and, also, how they interact with each other.
+The following article should also be useful.
+https://home.howstuffworks.com/toaster.h...
+
+--- ШАГИ ---
+
+Шаг 1:
+When lever
+1
+moves down, it lowers the basket containing the bread as well as a cam labelled
+2
+.  When this cam arrives at the end of the rail, it gets in position in between the two copper plates of the bipolar switch labelled
+3
+.
+These two copper plates are used to power on the toaster.
+If the toaster is plugged in, the lever is held down by an electro-magnet
+4
+. Time setting of the magnet is chosen using the button placed on top of the toaster actuating the electronic timer
+5
+To toast bread, the device has a network of
+heating elements
+6
+placed on both sides of the basket on insulating plates
+7
+. The elements are powered when the lever is held down.
+
+Шаг 2:
+When the lever is lowered, the contact pads of the bipolar switch
+3
+are closed. This allows the network of heating elements
+6
+, the electronic card
+5
+and the electromagnet
+4
+to be turned on.
+When the electromagnet is powered, it keeps the lever lowered. This process is controlled by the timer on the electronic card.
+When the time is up or the "stop" button is pressed, the timer releases the electro-magnet, which lets the lever rise with the tension of the spring and brings up the basket with the toasts inside. The toaster's circuit is then off.
+
+Шаг 3:
+This is an example of an electronic diagram of a toaster timer. The manufacturers use various assemblies often based on a  frequency oscillator and a timer (The MC14541BCP, datasheet provided
+here
+). The setting of the time is done with a potentiometer (P1 here).
+Each device is slightly different, so we won't go into the detail of the electronics here.
+The modified
+tip
+at the bottom of the diagram is worth noting. This prolongs the longevity of the contacts of the bipolar switch (see the chapter on the origin of toasters' breakdowns) Necessary tools: 1 triac BT138 + 1 resistance 4,7k
+Source:
+http://www.rvq.fr/tech/g-pain.php
