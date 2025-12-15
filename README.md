@@ -30,6 +30,7 @@ AI-ассистент, который по фотографии и описан�
 
 ## Отчёты по чекпоинтам
 Чекпоинт 1: https://github.com/GalReg/Fixly/blob/main/docs/Report_checkpoint1.md
+Чекпоинт 2: https://github.com/GalReg/Fixly/blob/main/docs/Report_checkpoint2.md
 
 ## 🚀 Технологический стек (план)
 
