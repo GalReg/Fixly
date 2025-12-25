@@ -1,0 +1,21 @@
+services:
+  telegram-bot:
+    image: fixly-telegram-bot:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fixly-telegram-bot
+    restart: unless-stopped
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - YANDEX_API_KEY=${YANDEX_API_KEY}
+      - YANDEX_FOLDER_ID=${YANDEX_FOLDER_ID}
+    volumes:
+      - ./vectorstore:/app/vectorstore
+      - ./ifixit_data:/app/ifixit_data
+    # If using webhooks instead of polling, uncomment the following lines:
+    # ports:
+    #   - "8000:8000"
+    # environment:
+    #   - WEBHOOK_URL=https://your-domain.com/webhook
+    #   - WEBHOOK_PORT=8000

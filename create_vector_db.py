@@ -8,7 +8,7 @@ from tqdm import tqdm
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import YandexGPTEmbeddings
-from langchain.schema import Document
+from langchain_core.documents import Document
 from dotenv import load_dotenv
 from concurrent.futures import ThreadPoolExecutor, as_completed
 

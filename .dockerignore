@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Documentation
+README.md
+docs/
+
+# Vectorstore data (needed for production)
+!vectorstore/
+!vectorstore/**
+
+# Evaluation data
+eval_data/
+evaluated_dialogues.csv
+evaluation_report.txt
+generated_dialogues.csv
+
+# Development scripts (not needed in production)
+analyze_docs.py
+create_vector_db.py
+extract_ifixit.py
+generate_dialogues.py
+inspect_by_index.py
+inspect_page.py
+llm_judge.py
+merge_vector_db.py

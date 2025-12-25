@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # bot_w_langchain_rag.py
 
 import logging
@@ -10,13 +11,15 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor
 from dotenv import load_dotenv
 
-# --- Импорты LangChain ---
 from langchain_community.llms import YandexGPT
-from langchain_community.embeddings import YandexGPTEmbeddings
+try:
+    from langchain_community.embeddings.yandex import YandexGPTEmbeddings
+except ImportError:
+    from langchain_community.embeddings import YandexGPTEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationChain
-from langchain.prompts import (
+from langchain_core.prompts import (
     ChatPromptTemplate,
     MessagesPlaceholder,
     SystemMessagePromptTemplate,
@@ -26,7 +29,8 @@ from langchain.prompts import (
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.runnables import RunnableLambda
-from langchain.schema import Document, HumanMessage
+from langchain_core.documents import Document
+from langchain_core.messages import HumanMessage
 
 # --- НАСТРОЙКИ ---
 load_dotenv()
@@ -105,7 +109,14 @@ llm = YandexGPT(
 )
 
 try:
-    embeddings_model = YandexGPTEmbeddings(api_key=YANDEX_API_KEY, folder_id=YANDEX_FOLDER_ID)
+    # Initialize embeddings based on what's available
+    if YandexGPTEmbeddings.__name__ == "OpenAIEmbeddings":
+        # Fallback to OpenAI embeddings
+        embeddings_model = YandexGPTEmbeddings()
+    else:
+        # Use YandexGPT embeddings
+        embeddings_model = YandexGPTEmbeddings(api_key=YANDEX_API_KEY, folder_id=YANDEX_FOLDER_ID)
+    
     db = FAISS.load_local(DB_FAISS_PATH, embeddings_model, allow_dangerous_deserialization=True)
     retriever = db.as_retriever(search_type="similarity", search_kwargs={'k': 3})
     logging.info("Векторная база данных и ретривер успешно загружены.")
