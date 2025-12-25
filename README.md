@@ -33,6 +33,8 @@ AI-ассистент, который по фотографии и описан�
 
 Чекпоинт 2: https://github.com/GalReg/Fixly/blob/main/docs/Report_checkpoint2.md
 
+Чекпоинт 3: https://github.com/GalReg/Fixly/blob/main/docs/Report_checkpoint3.md
+
 ## 🚀 Технологический стек (план)
 
 -   **Backend**: Python
