@@ -35,6 +35,8 @@ AI-ассистент, который по фотографии и описан�
 
 Чекпоинт 3: https://github.com/GalReg/Fixly/blob/main/docs/Report_checkpoint3.md
 
+Демонстрация работы: https://github.com/GalReg/Fixly/blob/main/fixly.gif
+
 ## 🚀 Технологический стек (план)
 
 -   **Backend**: Python

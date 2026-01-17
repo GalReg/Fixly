@@ -12,6 +12,7 @@ from aiogram.utils import executor
 from dotenv import load_dotenv
 
 from langchain_community.llms import YandexGPT
+
 try:
     from langchain_community.embeddings.yandex import YandexGPTEmbeddings
 except ImportError:
@@ -40,8 +41,10 @@ YANDEX_API_KEY = os.getenv("YANDEX_API_KEY")
 YANDEX_FOLDER_ID = os.getenv("YANDEX_FOLDER_ID")
 DB_FAISS_PATH = "vectorstore/db_faiss"
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logging.getLogger('langchain.chains').setLevel(logging.WARNING)
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logging.getLogger("langchain.chains").setLevel(logging.WARNING)
 
 # --- ПРОМПТЫ ДЛЯ НЕЙРОСЕТИ ---
 
@@ -92,20 +95,30 @@ SYSTEM_PROMPT_ESTIMATE = """
 ### ИСТОРИЯ ПЕРЕПИСКИ С КЛИЕНТОМ:
 {history}
 """
+
+
 # --- PYDANTIC МОДЕЛИ (без изменений) ---
 class Part(BaseModel):
     name: str = Field(description="Название запчасти, материала или услуги")
     quantity: int = Field(description="Количество")
 
+
 class Estimate(BaseModel):
-    estimated_cause: str = Field(description="Развернутое описание наиболее вероятной причины поломки")
-    required_parts: List[Part] = Field(description="Список необходимых запчастей, материалов или услуг")
+    estimated_cause: str = Field(
+        description="Развернутое описание наиболее вероятной причины поломки"
+    )
+    required_parts: List[Part] = Field(
+        description="Список необходимых запчастей, материалов или услуг"
+    )
+
 
 # --- ИНИЦИАЛИЗАЦИЯ LANGCHAIN ---
 
 llm = YandexGPT(
-    api_key=YANDEX_API_KEY, folder_id=YANDEX_FOLDER_ID,
-    model_name="yandexgpt", temperature=0.5, # Температура повышена для "живости"
+    api_key=YANDEX_API_KEY,
+    folder_id=YANDEX_FOLDER_ID,
+    model_name="yandexgpt",
+    temperature=0.5,  # Температура повышена для "живости"
 )
 
 try:
@@ -115,10 +128,14 @@ try:
         embeddings_model = YandexGPTEmbeddings()
     else:
         # Use YandexGPT embeddings
-        embeddings_model = YandexGPTEmbeddings(api_key=YANDEX_API_KEY, folder_id=YANDEX_FOLDER_ID)
-    
-    db = FAISS.load_local(DB_FAISS_PATH, embeddings_model, allow_dangerous_deserialization=True)
-    retriever = db.as_retriever(search_type="similarity", search_kwargs={'k': 3})
+        embeddings_model = YandexGPTEmbeddings(
+            api_key=YANDEX_API_KEY, folder_id=YANDEX_FOLDER_ID
+        )
+
+    db = FAISS.load_local(
+        DB_FAISS_PATH, embeddings_model, allow_dangerous_deserialization=True
+    )
+    retriever = db.as_retriever(search_type="similarity", search_kwargs={"k": 3})
     logging.info("Векторная база данных и ретривер успешно загружены.")
 except Exception as e:
     logging.critical(f"КРИТИЧЕСКАЯ ОШИБКА: Не удалось загрузить RAG компоненты: {e}")
@@ -126,40 +143,66 @@ except Exception as e:
 
 # --- Цепочки LangChain ---
 
+
 def format_docs(docs: List[Document]) -> str:
     # ... (код без изменений)
     if not docs:
         logging.warning("RAG: В базе знаний не найдено релевантных документов.")
         return "Инструкции не найдены."
-    log_output = [f"'{doc.metadata.get('source', 'N/A').split('/')[-1]}'" for doc in docs]
-    logging.info(f"RAG: Найдено {len(docs)} релевантных документов: {', '.join(log_output)}")
-    return "\n\n".join([f"### Документ: {doc.metadata.get('source', 'Без заголовка').split('/')[-1]}\n{doc.page_content}" for doc in docs])
+    log_output = [
+        f"'{doc.metadata.get('source', 'N/A').split('/')[-1]}'" for doc in docs
+    ]
+    logging.info(
+        f"RAG: Найдено {len(docs)} релевантных документов: {', '.join(log_output)}"
+    )
+    return "\n\n".join(
+        [
+            f"### Документ: {doc.metadata.get('source', 'Без заголовка').split('/')[-1]}\n{doc.page_content}"
+            for doc in docs
+        ]
+    )
+
 
 user_memory = {}
+
+
 def get_conversation_chain(user_id: int) -> ConversationChain:
     # ... (код без изменений)
     if user_id not in user_memory:
-        user_memory[user_id] = ConversationBufferMemory(memory_key="history", return_messages=True)
+        user_memory[user_id] = ConversationBufferMemory(
+            memory_key="history", return_messages=True
+        )
     return ConversationChain(
-        llm=llm, prompt=ChatPromptTemplate.from_messages([
-            SystemMessagePromptTemplate.from_template(SYSTEM_PROMPT_DIALOGUE),
-            MessagesPlaceholder(variable_name="history"),
-            HumanMessagePromptTemplate.from_template("{input}")
-        ]),
-        memory=user_memory[user_id]
+        llm=llm,
+        prompt=ChatPromptTemplate.from_messages(
+            [
+                SystemMessagePromptTemplate.from_template(SYSTEM_PROMPT_DIALOGUE),
+                MessagesPlaceholder(variable_name="history"),
+                HumanMessagePromptTemplate.from_template("{input}"),
+            ]
+        ),
+        memory=user_memory[user_id],
     )
 
+
 parser = JsonOutputParser(pydantic_object=Estimate)
-estimate_prompt_template = PromptTemplate(template=SYSTEM_PROMPT_ESTIMATE, input_variables=["history", "context"])
+estimate_prompt_template = PromptTemplate(
+    template=SYSTEM_PROMPT_ESTIMATE, input_variables=["history", "context"]
+)
+
 
 def log_llm_output(x: Any) -> Any:
     # ... (код без изменений)
     logging.info(f"LLM RAW JSON OUTPUT:\n{x}")
     return x
 
+
 rag_chain = (
     # ... (код без изменений)
-    {"context": itemgetter("question") | retriever | format_docs, "history": itemgetter("history")}
+    {
+        "context": itemgetter("question") | retriever | format_docs,
+        "history": itemgetter("history"),
+    }
     | estimate_prompt_template
     | llm
     | RunnableLambda(log_llm_output)
@@ -170,22 +213,30 @@ rag_chain = (
 bot = Bot(token=TELEGRAM_BOT_TOKEN)
 dp = Dispatcher(bot)
 
-@dp.message_handler(commands=['start', 'help'])
+
+@dp.message_handler(commands=["start", "help"])
 async def send_welcome(message: types.Message):
     user_id = message.from_user.id
-    if user_id in user_memory: del user_memory[user_id]
+    if user_id in user_memory:
+        del user_memory[user_id]
     await message.reply("Здравствуйте! Я AI-ассистент Fixly. Опишите вашу проблему.")
-    if not retriever: await message.answer("⚠️ *Внимание:* База знаний (RAG) не загружена.", parse_mode="Markdown")
+    if not retriever:
+        await message.answer(
+            "⚠️ *Внимание:* База знаний (RAG) не загружена.", parse_mode="Markdown"
+        )
 
-@dp.message_handler(content_types=['text', 'photo'])
+
+@dp.message_handler(content_types=["text", "photo"])
 async def handle_message(message: types.Message):
     user_id = message.from_user.id
     user_text = message.text or message.caption or ""
-    if not user_text: return await message.reply("Пожалуйста, добавьте описание к вашему фото.")
-    if message.photo: user_text = f"[Фото]. Описание: {user_text}"
+    if not user_text:
+        return await message.reply("Пожалуйста, добавьте описание к вашему фото.")
+    if message.photo:
+        user_text = f"[Фото]. Описание: {user_text}"
 
     # Сообщение "Анализирую..." УБРАНО по вашему желанию
-    
+
     dialogue_chain = get_conversation_chain(user_id)
     gpt_response: str = await asyncio.to_thread(dialogue_chain.predict, input=user_text)
 
@@ -196,40 +247,59 @@ async def handle_message(message: types.Message):
         # 1. Мы не отправляем ответ модели, если в нем есть триггер.
         #    Вместо этого отправляем свои сообщения.
         await message.answer("Ищу подходящие инструкции и формирую список работ...")
-        
+
         try:
             # 2. Дальнейшая логика RAG и формирования сметы
             history_messages = dialogue_chain.memory.chat_memory.messages
-            history_str = "\n".join([f"{msg.type}: {msg.content}" for msg in history_messages])
-            user_query = " ".join([msg.content for msg in history_messages if isinstance(msg, HumanMessage)])
+            history_str = "\n".join(
+                [f"{msg.type}: {msg.content}" for msg in history_messages]
+            )
+            user_query = " ".join(
+                [
+                    msg.content
+                    for msg in history_messages
+                    if isinstance(msg, HumanMessage)
+                ]
+            )
             logging.info(f"RAG: Сформирован чистый запрос для поиска: '{user_query}'")
-            
-            estimate_dict = await asyncio.to_thread(rag_chain.invoke, {"question": user_query, "history": history_str})
+
+            estimate_dict = await asyncio.to_thread(
+                rag_chain.invoke, {"question": user_query, "history": history_str}
+            )
 
             # Форматирование ответа (без изменений)
             formatted_reply = "*Предварительный список работ готов!*\n\n"
             formatted_reply += f"*Вероятная причина:* {estimate_dict.get('estimated_cause', 'Не удалось определить')}\n\n"
-            parts = estimate_dict.get('required_parts', [])
+            parts = estimate_dict.get("required_parts", [])
             if parts:
                 formatted_reply += "*Необходимые запчасти:*\n"
                 for part in parts:
-                    formatted_reply += f"- {part.get('name', 'N/A')} ({part.get('quantity', 0)} шт.)\n"
+                    formatted_reply += (
+                        f"- {part.get('name', 'N/A')} ({part.get('quantity', 0)} шт.)\n"
+                    )
             else:
-                formatted_reply += "*Необходимые запчасти:* Запчасти, скорее всего, не потребуются.\n"
-            formatted_reply += "\n_Это предварительная оценка. Точный список работ определит мастер._"
+                formatted_reply += (
+                    "*Необходимые запчасти:* Запчасти, скорее всего, не потребуются.\n"
+                )
+            formatted_reply += (
+                "\n_Это предварительная оценка. Точный список работ определит мастер._"
+            )
 
-            await message.answer(formatted_reply, parse_mode='Markdown')
-            
+            await message.answer(formatted_reply, parse_mode="Markdown")
+
             # 3. Очищаем историю ПОСЛЕ успешной генерации
-            if user_id in user_memory: del user_memory[user_id]
+            if user_id in user_memory:
+                del user_memory[user_id]
 
         except Exception as e:
             logging.error(f"Ошибка при генерации сметы с RAG: {e}", exc_info=True)
-            await message.answer("Произошла ошибка при формировании списка работ. Похоже, вернулись неструктурированные данные. Попробуйте еще раз с другими формулировками.")
+            await message.answer(
+                "Произошла ошибка при формировании списка работ. Похоже, вернулись неструктурированные данные. Попробуйте еще раз с другими формулировками."
+            )
     else:
         # Если триггера нет, просто отправляем ответ бота в диалоге
         await message.answer(gpt_response)
 
-if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
 
+if __name__ == "__main__":
+    executor.start_polling(dp, skip_updates=True)
